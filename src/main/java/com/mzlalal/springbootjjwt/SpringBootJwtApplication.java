@@ -12,9 +12,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 @MapperScan("com.mzlalal.springbootjjwt.mapper")
-public class SpringbootJwtApplication {
+public class SpringBootJwtApplication {
     public static void main(String[] args) {
-        SpringApplication.run(SpringbootJwtApplication.class, args);
+        SpringApplication.run(SpringBootJwtApplication.class, args);
         System.out.println("启动完毕");
     }
 }
