@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	<root>
+		<level value="INFO" />
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
+	</root>
+
+	<!-- 控制台 -->
+	<appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
+		<param name="target" value="System.out" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[JWTLog] %d{yyyy-MM-dd HH:mm:ss,SSS} %-5p %C{6} (%F:%L) - %m%n" />
+		</layout>
+	</appender>
+
+	<!-- 滚动文件 -->
+	<appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
+		<param name="encoding" value="UTF-8" />
+		<param name="file" value="logs/jwt/jwt.log" />
+		<param name="append" value="true" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[JWTLog] %d{yyyy-MM-dd HH:mm:ss,SSS} %-5p %C{6} (%F:%L) - %m%n" />
+		</layout>
+	</appender>
+
+	<logger name="java.sql">
+		<level value="debug" />
+	</logger>
+	<logger name="org.apache">
+		<level value="ERROR" />
+	</logger>
+	<logger name="org.springframework">
+		<level value="WARN" />
+	</logger>
+	<logger name="org.mybatis.spring">
+		<level value="WARN" />
+	</logger>
+	<logger name="net.sf.ehcache">
+		<level value="WARN" />
+	</logger>
+	<logger name="com.mchange.v2">
+		<level value="WARN" />
+	</logger>
+</log4j:configuration>
