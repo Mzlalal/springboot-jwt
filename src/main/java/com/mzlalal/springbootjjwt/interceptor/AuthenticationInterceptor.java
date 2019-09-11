@@ -30,6 +30,8 @@ import java.lang.reflect.Method;
 public class AuthenticationInterceptor implements HandlerInterceptor {
     @Autowired
     UserService userService;
+    @Autowired
+    JwtTokenUtil jwtToken;
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
@@ -44,7 +46,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         Method method = handlerMethod.getMethod();
 
         // 检查是否有TokenPass注释，有则跳过认证
-        // 现在是使用注解部分验证token 好像写了没什么用
+        // 现在是使用根据方法上面是否带有注解token 有则验证 没有的话不加TokenPass也能够执行好像写了没什么用
         // 拦截的都是带注解的除非使用全局都使用验证token 但这样的话token注解没用 写着玩吧0.0
         if (method.isAnnotationPresent(TokenPass.class)) {
             TokenPass passToken = method.getAnnotation(TokenPass.class);
@@ -74,7 +76,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 }
                 // 验证 token 使用用户密码作为私匙
                 try {
-                    JwtTokenUtil.parseToken(user, token);
+                    jwtToken.parseToken(user, token);
                 } catch (JWTVerificationException e) {
                     throw new RuntimeException("401");
                 }

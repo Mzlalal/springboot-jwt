@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <script src="../js/jquery-1.10.2.min.js"></script>
+</head>
+<body>
+<form id="loginForm">
+    用户名:<input type="text" name="username" autocomplete="false"/><br/>
+    密码:<input type="password" name="password" autocomplete="false"/><br/>
+    <input type="button" value="提交" onclick="login()" />
+    <input type="button" value="验证token" onclick="verifyToken()" />
+</form>
+<script>
+    function login() {
+        var loginFormData = $("#loginForm").serialize();
+        $.ajax({
+            method : "POST",
+            url : "/api/login",
+            data : loginFormData,
+            success : function (data) {
+                if (data.message) {
+                    alert(data.message);
+                }
+                localStorage.setItem("token", data.token);
+                console.log(localStorage.getItem("token"));
+            },
+            error : function (data) {
+                console.log(data);
+            }
+        });
+    }
+    function verifyToken() {
+        $.ajax({
+            method : "POST",
+            url : "/api/verifyToken",
+            data : {"token": localStorage.getItem("token")},
+            beforeSend: function(request) {
+                request.setRequestHeader("token", localStorage.getItem("token"));
+            },
+            success : function (data) {
+                console.log(data);
+            },
+            error : function (data) {
+                console.log(data);
+            }
+        });
+    }
+    $(document).ready(
+    )
+</script>
+</body>
+</html>

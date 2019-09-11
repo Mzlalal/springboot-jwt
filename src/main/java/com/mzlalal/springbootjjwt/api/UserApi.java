@@ -1,14 +1,19 @@
 package com.mzlalal.springbootjjwt.api;
 
 import com.alibaba.fastjson.JSONObject;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.mzlalal.springbootjjwt.annotation.Token;
 import com.mzlalal.springbootjjwt.annotation.TokenPass;
 import com.mzlalal.springbootjjwt.entity.User;
 import com.mzlalal.springbootjjwt.service.UserService;
 import com.mzlalal.springbootjjwt.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * @description:  测试api
@@ -22,13 +27,16 @@ public class UserApi {
     @Autowired
     UserService userService;
 
+    @Autowired
+    JwtTokenUtil jwtTokenUtil;
+
     /**
      * 登录
      * @param user
      * @return
      */
-    @RequestMapping("/login")
-    public JSONObject login(User user) {
+    @PostMapping("/login")
+    public JSONObject login(User user, HttpSession session) {
         JSONObject jsonObject = new JSONObject();
 
         // 根据用户名称查询用户
@@ -42,9 +50,10 @@ public class UserApi {
                 jsonObject.put("message", "登录失败,密码错误");
                 return jsonObject;
             } else {
-                String token = JwtTokenUtil.createToken(userForBase);
+                String token = jwtTokenUtil.createToken(userForBase);
                 jsonObject.put("token", token);
                 jsonObject.put("user", userForBase);
+                session.setAttribute("accessUser", userForBase);
                 return jsonObject;
             }
         }
@@ -54,5 +63,15 @@ public class UserApi {
     @GetMapping("/getMessage")
     public String getMessage() {
         return "你是国家免检产品!";
+    }
+
+    @PostMapping("/verifyToken")
+    public String verifyToken(String token, HttpSession session) {
+        User accessUser = session.getAttribute("accessUser") != null ? (User)session.getAttribute("accessUser") : null;
+        DecodedJWT jwt = jwtTokenUtil.parseToken(accessUser, token);
+        if (jwt != null) {
+            return "成功";
+        }
+        return "失败";
     }
 }

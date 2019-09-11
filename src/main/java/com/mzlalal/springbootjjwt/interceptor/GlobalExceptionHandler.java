@@ -1,6 +1,7 @@
 package com.mzlalal.springbootjjwt.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -17,14 +18,24 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class GlobalExceptionHandler {
 
     @ResponseBody
+    @ExceptionHandler(TokenExpiredException.class)
+    public JSONObject handleTokenExpiredException(TokenExpiredException e) {
+        return setErrorMsg("token 过期!", e);
+    }
+
+    @ResponseBody
     @ExceptionHandler(Exception.class)
-    public Object handleException(Exception e) {
+    public JSONObject handleException(Exception e) {
+        return setErrorMsg("服务繁忙!", e);
+    }
+
+    public JSONObject setErrorMsg (String message, Exception e) {
         // 获取根信息
-        String msg = ExceptionUtils.getRootCause(e).getMessage();
+        String msg = ExceptionUtils.getRootCauseMessage(e);
 
         // 如果根信息为空
         if (StringUtils.isBlank(msg)) {
-            msg = "服务器出错";
+            msg = message;
         }
 
         JSONObject jsonObject = new JSONObject();
