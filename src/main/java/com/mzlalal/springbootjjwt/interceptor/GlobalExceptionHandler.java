@@ -2,6 +2,7 @@ package com.mzlalal.springbootjjwt.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @date:         2019/9/5 16:03
  * @version:      1.0
  */
+@Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -36,6 +38,9 @@ public class GlobalExceptionHandler {
      * @return
      */
     public JSONObject setErrorMsg (String message, Exception e) {
+        // 记录到日志
+        log.error("", e);
+
         // 获取根信息
         String msg = ExceptionUtils.getRootCauseMessage(e);
 
