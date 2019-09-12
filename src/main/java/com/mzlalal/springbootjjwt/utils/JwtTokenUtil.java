@@ -24,9 +24,15 @@ import java.util.Date;
 @PropertySource("classpath:global.properties")
 public class JwtTokenUtil {
 
+    /**
+     * 私匙
+     */
     @Value("${jwt.secret: mySecret}")
     private String secret;
 
+    /**
+     * 过期时间
+     */
     @Value("${jwt.expiration: 30}")
     private int expiration;
 
@@ -36,7 +42,7 @@ public class JwtTokenUtil {
      * @return
      */
     public String createToken(User user) {
-        // 将 user id 保存到 token 里面 以 password 作为 token 的密钥
+        // 将 user id 保存到 token 里面
         Date now = new Date();
         return JWT.create()
                 // 签发时间
@@ -46,17 +52,17 @@ public class JwtTokenUtil {
                 // 接受者ID
                 .withAudience(user.getId())
                 // 使用密码作为私匙
-                .sign(Algorithm.HMAC256(user.getPassword()));
+                .sign(Algorithm.HMAC256(secret));
     }
 
     /**
      * 通过 user 解析 token
-     * @param user  用户
      * @param token token
-     * @return
+     * @return DecodedJWT
+     * @throws JWTVerificationException
      */
-    public DecodedJWT parseToken(User user, String token) throws JWTVerificationException {
-        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
+    public DecodedJWT parseToken(String token) throws JWTVerificationException {
+        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(secret)).build();
         return jwtVerifier.verify(token);
     }
 }

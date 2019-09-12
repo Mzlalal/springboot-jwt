@@ -74,9 +74,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 if (user == null) {
                     throw new RuntimeException("用户不存在,请重新登录");
                 }
-                // 验证 token 使用用户密码作为私匙
                 try {
-                    jwtToken.parseToken(user, token);
+                    jwtToken.parseToken(token);
                 } catch (JWTVerificationException e) {
                     throw new RuntimeException("401");
                 }

@@ -67,8 +67,7 @@ public class UserApi {
 
     @PostMapping("/verifyToken")
     public String verifyToken(String token, HttpSession session) {
-        User accessUser = session.getAttribute("accessUser") != null ? (User)session.getAttribute("accessUser") : null;
-        DecodedJWT jwt = jwtTokenUtil.parseToken(accessUser, token);
+        DecodedJWT jwt = jwtTokenUtil.parseToken(token);
         if (jwt != null) {
             return "成功";
         }

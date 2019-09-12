@@ -29,6 +29,12 @@ public class GlobalExceptionHandler {
         return setErrorMsg("服务繁忙!", e);
     }
 
+    /**
+     * 返回信息 若获取根信息为空 则返回默认信息message
+     * @param message 默认信息
+     * @param e 异常
+     * @return
+     */
     public JSONObject setErrorMsg (String message, Exception e) {
         // 获取根信息
         String msg = ExceptionUtils.getRootCauseMessage(e);
