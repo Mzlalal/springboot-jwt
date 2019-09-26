@@ -17,7 +17,7 @@
         var loginFormData = $("#loginForm").serialize();
         $.ajax({
             method : "POST",
-            url : "/api/login",
+            url : "../api/login",
             data : loginFormData,
             success : function (data) {
                 if (data.message) {
@@ -41,7 +41,7 @@
         }
         $.ajax({
             method : "POST",
-            url : "/api/verifyToken",
+            url : "../api/verifyToken",
             data : {"token": token},
             beforeSend: function(request) {
                 if (window.localStorage) {
